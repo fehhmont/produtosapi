@@ -4,6 +4,7 @@ import com.produtosapi.produtosapi.model.Produto;
 import com.produtosapi.produtosapi.repository.ProdutoRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -16,6 +17,11 @@ public class produtoController {
         this.produtoRepository = produtoRepository;
     }
 
+    @GetMapping("findAll")
+    public List<Produto> findAll(){
+        return produtoRepository.findAll();
+    }
+
     @PostMapping
     public Produto salvar(@RequestBody Produto produto){
         System.out.println("Produto Recebido:" + produto);
@@ -23,6 +29,26 @@ public class produtoController {
         produto.setId(id);
         produtoRepository.save(produto);
         return  produto;
+    }
+
+    @GetMapping("/{id}")
+    public Produto obterPorId(@PathVariable("id") String id){
+      //  Optional<Produto> produto = produtoRepository.findById(id);
+       // return produto.isPresent() ? produto.get() : null;
+
+
+        return produtoRepository.findById(id).orElse(null);
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable("id") String id){
+        produtoRepository.deleteById(id);
+    }
+
+    @PutMapping("{id}")
+    public void atualizar(@PathVariable String id, @RequestBody Produto produto){
+        produto.setId(id);
+        produtoRepository.save(produto);
     }
 
 
